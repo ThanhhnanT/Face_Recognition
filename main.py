@@ -13,14 +13,15 @@ cap.set(4, 350)
 curMatchIndex = -1
 pathMode = os.listdir('interface')
 pathMode = sorted(pathMode, key=lambda x: int(x.split('.')[0]))
+print(pathMode)
 imageMode = []
 modeType = 0
 for path in pathMode:
     image = cv2.imread(os.path.join('interface', path))
-    image = cv2.resize(image, (373, 504))
+    image = cv2.resize(image, (361, 537))
     imageMode.append(image)
 
-background = cv2.imread('background.png')
+background = cv2.imread('background.jpeg')
 
 # Loading imageEncode
 file = open('imageEncodeId.p', 'rb')
@@ -32,7 +33,7 @@ while True:
     flag, frame = cap.read()
     if not flag:
         break
-    frame_resized = cv2.resize(frame, (449, 350))
+    frame_resized = cv2.resize(frame, (502, 306))
     imgS = cv2.resize(frame_resized, (0,0), None, 0.5, 0.5)
     imgS = cv2.cvtColor(imgS, cv2.COLOR_BGR2RGB)
     curFrame = face_recognition.face_locations(imgS)
@@ -66,17 +67,17 @@ while True:
                 res = requests.get(url)
                 avatar = np.asarray(bytearray(res.content), dtype=np.uint8)
                 avatar = cv2.imdecode(avatar, cv2.IMREAD_COLOR)
-                avatar = cv2.resize(avatar, (183,173))
-                cv2.putText(imageMode[2], "StudentId: {}".format(id), (115,353), fontFace=1, fontScale=1,
+                avatar = cv2.resize(avatar, (215,200))
+                cv2.putText(imageMode[2], "StudentId: {}".format(id), (92,365), fontFace=1, fontScale=1,
                     color=(255, 255, 255) , thickness=2)
-                cv2.putText(imageMode[2], "FullName: {}".format(fullName), (133,398), fontFace=1, fontScale=1,
+                cv2.putText(imageMode[2], "FullName: {}".format(fullName), (92,435), fontFace=1, fontScale=1,
                     color=(255, 255, 255), thickness=2 )
-                imageMode[2][105:278, 98:281] = avatar
+                imageMode[2][90:290, 75:290] = avatar
                 modeType = 2
 
 
-    background[30:534, 530: 903] = imageMode[modeType]
-    background[136:486, 45:45+449] = frame_resized
+    background[0:537, 550: 911] = imageMode[modeType]
+    background[164:470, 28:530] = frame_resized
     cv2.imshow('Webcam', background)
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
